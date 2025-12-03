@@ -16,7 +16,7 @@ export default function AnimatedBackground() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Optimized particles with reduced count for better performance
+    // Enhanced particles with multiple layers
     const particles: Array<{
       x: number;
       y: number;
@@ -34,20 +34,20 @@ export default function AnimatedBackground() {
       'rgba(255, 255, 255, ',    // white
     ];
 
-    // Create fewer particles for smoother performance
-    for (let i = 0; i < 50; i++) {
+    // Create more particles with varied properties
+    for (let i = 0; i < 80; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        size: Math.random() * 2.5 + 0.5,
-        opacity: Math.random() * 0.25 + 0.1,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: Math.random() * 3 + 0.5,
+        opacity: Math.random() * 0.3 + 0.1,
         color: colors[Math.floor(Math.random() * colors.length)],
       });
     }
 
-    // Reduced orbs for better performance
+    // Floating orbs for depth
     const orbs: Array<{
       x: number;
       y: number;
@@ -58,33 +58,22 @@ export default function AnimatedBackground() {
       opacity: number;
     }> = [];
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
       orbs.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 150 + 80,
-        vx: (Math.random() - 0.5) * 0.08,
-        vy: (Math.random() - 0.5) * 0.08,
+        radius: Math.random() * 200 + 100,
+        vx: (Math.random() - 0.5) * 0.1,
+        vy: (Math.random() - 0.5) * 0.1,
         color: colors[i % colors.length],
-        opacity: 0.025 + Math.random() * 0.015,
+        opacity: 0.03 + Math.random() * 0.02,
       });
     }
 
     let animationId: number;
-    let lastTime = 0;
-    const targetFPS = 60;
-    const frameInterval = 1000 / targetFPS;
 
-    function animate(currentTime: number) {
+    function animate() {
       if (!ctx || !canvas) return;
-      
-      // Throttle to target FPS for smoother performance
-      const deltaTime = currentTime - lastTime;
-      if (deltaTime < frameInterval) {
-        animationId = requestAnimationFrame(animate);
-        return;
-      }
-      lastTime = currentTime - (deltaTime % frameInterval);
       
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -120,22 +109,25 @@ export default function AnimatedBackground() {
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fillStyle = particle.color + particle.opacity + ')';
         ctx.fill();
+
+        // Add subtle glow
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = particle.color + particle.opacity + ')';
+        ctx.shadowBlur = 0;
       });
 
-      // Optimized connections - only check nearby particles
-      const connectionDistance = 120;
+      // Draw connections between nearby particles
       particles.forEach((p1, i) => {
-        particles.slice(i + 1, i + 6).forEach((p2) => {
+        particles.slice(i + 1).forEach((p2) => {
           const dx = p1.x - p2.x;
           const dy = p1.y - p2.y;
-          const distanceSquared = dx * dx + dy * dy;
+          const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distanceSquared < connectionDistance * connectionDistance) {
-            const distance = Math.sqrt(distanceSquared);
+          if (distance < 150) {
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.08 * (1 - distance / connectionDistance)})`;
+            ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - distance / 150)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
