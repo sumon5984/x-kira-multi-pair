@@ -55,7 +55,7 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                 >
                   <motion.div 
                     className="inline-block px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 mb-4"
@@ -116,7 +116,7 @@ export default function Home() {
                   className="order-first lg:order-last"
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                  transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
                 >
                   <div className="bg-gradient-to-br from-indigo-900/40 to-transparent border border-border rounded-2xl p-8 backdrop-blur-sm hover:border-indigo-500/30 transition-all duration-300">
                     <h3 className="text-lg font-semibold mb-4">How to Pair x-kira Bot</h3>
