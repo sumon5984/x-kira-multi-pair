@@ -102,18 +102,18 @@ export default function ServerButtons() {
   return (
     <div className="flex flex-col gap-5 w-full max-w-2xl mx-auto">
       {servers.map((server, index) => (
-        <motion.div
+        <Link
           key={server.id}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
+          href={server.id === 0 ? '/pair' : `/pair?server=${server.id}`}
+          className={`group relative block ${!server.available ? 'pointer-events-none' : ''}`}
         >
-          <Link
-            href={server.id === 0 ? '/pair' : `/pair?server=${server.id}`}
-            className={`group relative block ${!server.available ? 'pointer-events-none' : ''}`}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
           >
             <motion.div
-              className="relative overflow-hidden rounded-2xl p-6 border transition-all duration-300"
+              className="relative overflow-hidden rounded-2xl p-6 border transition-all duration-300 cursor-pointer"
               style={{
                 background: server.available 
                   ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%)'
@@ -210,30 +210,9 @@ export default function ServerButtons() {
                 )}
               </div>
 
-              {/* Progress Bar */}
-              {server.available && (
-                <div className="mt-4">
-                  <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                    <motion.div
-                      className={`h-full rounded-full ${
-                        server.userCount <= 20 ? 'bg-emerald-500' :
-                        server.userCount <= 30 ? 'bg-sky-500' :
-                        server.userCount <= 50 ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${Math.min((server.userCount / 60) * 100, 100)}%` }}
-                      transition={{ duration: 1, ease: "easeOut" }}
-                    />
-                  </div>
-                  <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                    <span>Load: {Math.min((server.userCount / 60) * 100, 100).toFixed(0)}%</span>
-                    <span>Capacity: 60</span>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          </Link>
-        </motion.div>
+              </motion.div>
+          </motion.div>
+        </Link>
       ))}
     </div>
   );
